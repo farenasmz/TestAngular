@@ -52,7 +52,7 @@ namespace TestAngular.Controllers
                         return BadRequest(result.Errors);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return BadRequest();
                 }

@@ -37,7 +37,7 @@ namespace TestAngular
 
             services.AddDbContext<DataContext>(cfg =>
             {
-                cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infraestructure"));
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
