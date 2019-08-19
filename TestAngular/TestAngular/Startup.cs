@@ -1,4 +1,5 @@
 using Infraestructure;
+using Infraestructure.GenericRepository;
 using Infraestructure.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

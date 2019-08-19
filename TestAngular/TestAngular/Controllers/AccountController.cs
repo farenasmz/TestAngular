@@ -1,4 +1,5 @@
-﻿using Infraestructure.Models;
+﻿using Infraestructure.GenericRepository;
+using Infraestructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,42 +16,26 @@ namespace TestAngular.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IUserRepository Repository;
 
-        public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration)
+        public AccountController(IUserRepository repository, IConfiguration iConfiguration)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            this._configuration = configuration;
+            this._configuration = iConfiguration;
+            Repository = repository;
         }
 
         [Route("Create")]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserInfo model)
         {
-            ApplicationUser user;
-            IdentityResult result;
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                    result = await _userManager.CreateAsync(user, model.Password);
-
-                    if (result.Succeeded)
-                    {
-                        return BuildToken(model);
-                    }
-                    else
-                    {
-                        return BadRequest(result.Errors);
-                    }
+                    model.isActive = true;
+                    await Repository.CreateAsync(model);
+                    return BuildToken(model);
                 }
                 catch (Exception)
                 {
@@ -67,15 +52,22 @@ namespace TestAngular.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] UserInfo userInfo)
         {
-            Microsoft.AspNetCore.Identity.SignInResult result;
+            UserInfo tmpUserInfo;
 
             if (ModelState.IsValid)
             {
-                result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
+                tmpUserInfo = await Repository.ValidateEmailAndPassword(userInfo.Email, userInfo.Password);    
 
-                if (result.Succeeded)
+                if (tmpUserInfo != null)
                 {
-                    return BuildToken(userInfo);
+                    if (tmpUserInfo.isActive)
+                    {
+                        return BuildToken(userInfo);
+                    }
+                    else
+                    {
+                        return BadRequest("Blocked user.");
+                    }
                 }
                 else
                 {

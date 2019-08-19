@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Infraestructure
 {
-    public class DataContext: IdentityDbContext<ApplicationUser>
+    public class DataContext: DbContext
     {
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
@@ -14,5 +14,6 @@ namespace Infraestructure
         }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<UserInfo> Users { get; set; }
     }
 }
