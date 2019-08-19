@@ -6,5 +6,6 @@ namespace Infraestructure.GenericRepository
     public interface IUserRepository : IGenericRepository<UserInfo>
     {
         Task<UserInfo> ValidateEmailAndPassword(string email, string password);
+        bool ValidateEmail(string email);
     }
 }

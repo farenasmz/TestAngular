@@ -1,5 +1,6 @@
 using Infraestructure;
 using Infraestructure.GenericRepository;
+using Infraestructure.Implementation;
 using Infraestructure.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +41,9 @@ namespace TestAngular
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infraestructure"));
             });
+
+            services.AddScoped<IUserRepository, UserInfoRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
             {

@@ -1,4 +1,5 @@
 ﻿using Infraestructure.GenericRepository;
+using Infraestructure.Helpers;
 using Infraestructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,13 @@ namespace TestAngular.Controllers
             {
                 try
                 {
+                    if (Repository.ValidateEmail(model.Email))
+                    {
+                        return BadRequest("Email already registered.");
+                    }
+
                     model.isActive = true;
+                    model.Password = Security.sha256_hash(model.Password);
                     await Repository.CreateAsync(model);
                     return BuildToken(model);
                 }
@@ -56,6 +63,7 @@ namespace TestAngular.Controllers
 
             if (ModelState.IsValid)
             {
+                userInfo.Password = Security.sha256_hash(userInfo.Password);
                 tmpUserInfo = await Repository.ValidateEmailAndPassword(userInfo.Email, userInfo.Password);    
 
                 if (tmpUserInfo != null)

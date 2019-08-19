@@ -10,9 +10,9 @@ namespace TestAngular.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IGenericRepository<Product> Repository;
+        private readonly IProductRepository Repository;
 
-        public ProductsController(IGenericRepository<Product> repository)
+        public ProductsController(IProductRepository repository)
         {
             Repository = repository;
         }
