@@ -20,11 +20,11 @@ export class UserService {
   }
 
   createUser(user: IUser): Observable<IUser> {
-    return this.http.post<IUser>(this.apiURL, user);
+    return this.http.post<any>(this.apiURL + "/Create", user)
   }
 
   updateUser(product: IUser): Observable<IUser> {
-    return this.http.put<IUser>(this.apiURL + "/" + product.Id.toString(), product);
+    return this.http.put<IUser>(this.apiURL + "/", product);
   }
 
   deleteUser(userID: string): Observable<IUser> {

@@ -19,6 +19,7 @@ import { ProductService } from './products/product.service';
 import { ProductsFormComponent } from './products/products-form/products-form.component';
 import { UsersComponent } from './users/users.component';
 import { UserService } from './users/user.service';
+import { UsersFormComponent } from './users/users-form/users-form.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { UserService } from './users/user.service';
     RegisterComponent,
     ProductsComponent,
     ProductsFormComponent,
-    UsersComponent
+    UsersComponent,
+    UsersFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -46,7 +48,8 @@ import { UserService } from './users/user.service';
       { path: 'products-add', component: ProductsFormComponent },
       { path: 'products-edit/:id', component: ProductsFormComponent },
       { path: 'users', component: UsersComponent },
-      //{ path: 'users-edit/:id', component: UsersFormComponent },
+      { path: 'users-edit/:id', component: UsersFormComponent },
+      { path: 'users-add', component: UsersFormComponent},
     ])
   ],
   providers: [

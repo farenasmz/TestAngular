@@ -1,6 +1,6 @@
 <h1>Products</h1>
 
-<button [routerLink]='["/products-add"]' class="btn btn-primary">Add product</button>
+<button [routerLink]='["/users-add"]' class="btn btn-primary">Add product</button>
 
 <p *ngIf="!(Datausers && Datausers.length)">
   No results.
@@ -19,8 +19,8 @@
       <td>{{user.email}}</td>
       <td>{{user.isActive ? 'Enable' : 'Disable'}}</td>
       <td>
-        <button class="btn btn-primary" [routerLink]='["/products-edit/" + user.id]'>Edit</button>
-        <button class="btn btn-danger" (click)="delete(user)">Delete</button>
+        <button class="btn btn-primary" [routerLink]='["/users-edit/" + user.id]'>Edit</button>
+        <button class="btn btn-danger" (click)="delete(user.id)">Delete</button>
       </td>
     </tr>
   </tbody>

@@ -17,8 +17,8 @@ export class UsersComponent implements OnInit {
     this.cargarData();
   }
 
-  delete(user: IUser) {
-    this.userService.deleteUser(user.Id.toString())
+  delete(userid: number) {
+    this.userService.deleteUser(userid.toString())
       .subscribe(product => this.cargarData(),
         error => console.error(error));
   }

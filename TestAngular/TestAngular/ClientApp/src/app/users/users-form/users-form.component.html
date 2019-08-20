@@ -1,0 +1,61 @@
+<h1>{{modoEdicion ? 'Edit' : 'Add'}} Users</h1>
+<form class="form-horizontal" novalidate
+      (ngSubmit)="save()" [formGroup]="formGroup">
+  <fieldset>
+
+    <div class="form-group"
+         [ngClass]="{'has-error': (formGroup.get('email').touched || formGroup.get('email').dirty) && !formGroup.get('email').valid }">
+      <label class="col-md-2 control-label"
+             for="email">email</label>
+
+      <div class="col-md-8">
+        <input class="form-control"
+               id="email"
+               type="email"
+               required
+               formControlName="email" />
+        <span class="help-block" *ngIf="(formGroup.get('email').touched || formGroup.get('email').dirty) && formGroup.get('email').errors">
+          <span *ngIf="formGroup.get('email').errors.required">
+            Required
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group"
+         [ngClass]="{'has-error': (formGroup.get('password').touched || formGroup.get('password').dirty) && !formGroup.get('password').valid }">
+      <label class="col-md-2 control-label"
+             for="password">password</label>
+
+      <div class="col-md-8">
+        <input class="form-control"
+               id="password"
+               type="password"
+               required
+               formControlName="password" />
+        <span class="help-block" *ngIf="(formGroup.get('password').touched || formGroup.get('password').dirty) && formGroup.get('password').errors">
+          <span *ngIf="formGroup.get('password').errors.required">
+            Required
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-4 col-md-offset-2">
+        <span>
+          <button class="btn btn-primary"
+                  type="submit"
+                  [disabled]="!formGroup.valid">
+            Save
+          </button>
+          <button class="btn"
+                  type="button"
+                  [routerLink]='["/Account"]'>
+            Cancel
+          </button>
+        </span>
+      </div>
+    </div>
+  </fieldset>
+</form>

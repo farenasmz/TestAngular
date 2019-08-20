@@ -54,6 +54,8 @@ namespace TestAngular.Controllers
                 {
                     return NotFound();
                 }
+
+                user.Password = string.Empty;
             }
             catch (Exception)
             {
@@ -134,7 +136,31 @@ namespace TestAngular.Controllers
                 {
                     return NotFound();
                 }
+                //user.Password = Security.sha256_hash(user.Password);
+                await this.Repository.UpdateAsync(user);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Product>> DeleteUser(int id)
+        {
+            User user;
+
+            try
+            {
+                user = await this.Repository.GetByIdAsync(id);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.isActive = false;
                 await this.Repository.UpdateAsync(user);
                 return Ok();
             }
