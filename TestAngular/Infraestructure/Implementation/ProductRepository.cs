@@ -15,7 +15,7 @@ namespace Infraestructure.Implementation
 
 		public void ResetProductQuantity(int productId, int quantity)
 		{
-			string sql = "UPDATE Products SET quantity = @Quantity WHERE PRODUCTID = @ProductID; ";
+			string sql = "UPDATE Products SET quantity = @Quantity WHERE id = @ProductID; ";
 			SqlParameter pQuantity = new SqlParameter("@Quantity", quantity);
 			SqlParameter pProductId = new SqlParameter("@ProductID", productId);
 			context.Database.ExecuteSqlCommand(sql, pQuantity, pProductId);

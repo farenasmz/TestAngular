@@ -23,7 +23,7 @@
       <td>
         <button class="btn btn-primary" [routerLink]='["/products-edit/" + product.id]'>Edit</button>
         <button class="btn btn-warning" (click)="delete(product)">Delete</button>
-        <button class="btn btn-danger" (click)="resetProduct(product.id)">Reset Product</button>
+        <button class="btn btn-danger" [routerLink]='["/products-password/" + product.id]'>Reset Product</button>
       </td>
     </tr>
   </tbody>
