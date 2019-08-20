@@ -24,6 +24,8 @@ import { ProductBookComponent } from './product-book/product-book.component';
 import { ProductBookService } from './product-book/product-book.service';
 import { ProductPasswordComponent } from './products/product-password/product-password.component';
 import { ProductPasswordService } from './products/product-password.service';
+import { LogComponent } from './logs/log/log.component';
+import { LogService } from './logs/log.service';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,7 @@ import { ProductPasswordService } from './products/product-password.service';
     UsersFormComponent,
     ProductBookComponent,
     ProductPasswordComponent,
+    LogComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -58,6 +61,7 @@ import { ProductPasswordService } from './products/product-password.service';
       { path: 'users-add', component: UsersFormComponent, canActivate: [AuthGuardService]  },
       { path: 'product-book', component: ProductBookComponent },
       { path: 'products-password/:id', component: ProductPasswordComponent },
+      { path: 'logs', component: LogComponent },
     ])
   ],
   providers: [
@@ -66,6 +70,7 @@ import { ProductPasswordService } from './products/product-password.service';
     ProductService,
     ProductBookService,
     ProductPasswordService,
+    LogService,
     AccountService,
     {
       provide: HTTP_INTERCEPTORS,

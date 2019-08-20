@@ -53,6 +53,7 @@ export class ProductPasswordComponent implements OnInit {
 
   onSaveSuccess() {
     this.router.navigate
+    this.router.navigate(["products"]);
   }
 
 }

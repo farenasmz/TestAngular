@@ -44,6 +44,11 @@
             <span class='glyphicon glyphicon-th-list'></span> Product Book
           </a>
         </li>
+        <li [routerLinkActive]='["link-active"]'>
+          <a [routerLink]='["/logs"]' (click)='collapse()'>
+            <span class='glyphicon glyphicon-th-list'></span> User's Log
+          </a>
+        </li>
         <li *ngIf="!estaLogueado()" [routerLinkActive]='["link-active"]'>
           <a [routerLink]='["/register-login"]' (click)='collapse()'>
             <span class='glyphicon glyphicon-th-list'></span> Register / Login

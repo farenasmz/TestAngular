@@ -2,7 +2,7 @@
 
 namespace Infraestructure.Migrations
 {
-    public partial class booking : Migration
+    public partial class LogsComplete2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

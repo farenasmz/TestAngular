@@ -1,6 +1,6 @@
 export interface ILog {
   id: number;
   userName: string;
-  dateLogged: Date;
+  dateLogged: string;
   description: string;
 }

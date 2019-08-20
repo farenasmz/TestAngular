@@ -78,5 +78,6 @@ export class UsersFormComponent implements OnInit {
 
   onSaveSuccess() {
     this.router.navigate
+    this.router.navigate(["users"]);
   }
 }

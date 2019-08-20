@@ -16,5 +16,6 @@ namespace Infraestructure
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<BookProduct> BookProducts { get; set; }
-    }
+		public DbSet<Log> Logs { get; set; }
+	}
 }
