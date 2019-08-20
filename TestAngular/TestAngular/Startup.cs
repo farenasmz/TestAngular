@@ -43,7 +43,8 @@ namespace TestAngular
             });
 
             services.AddScoped<IUserRepository, UserInfoRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
+			services.AddScoped<IBookProduct, BookRepository>();
+			services.AddScoped<IProductRepository, ProductRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(options =>
                options.TokenValidationParameters = new TokenValidationParameters

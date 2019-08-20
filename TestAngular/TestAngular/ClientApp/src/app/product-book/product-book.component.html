@@ -19,7 +19,8 @@
       <td>{{product.quantity}}</td>
       <td>{{product.isActive ? 'Enable' : 'Disable'}}</td>
       <td>
-        <button class="btn btn-danger" (click)="bookProduct(product.id)">Book</button>
+        <button class="btn btn-success" (click)="PlusbookProduct(product.id)">Reservation / +</button>
+        <button class="btn btn-warning" (click)="MinusbookProduct(product.id)">Delete reservation / -</button>
       </td>
     </tr>
   </tbody>

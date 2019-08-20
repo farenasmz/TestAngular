@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IProduct } from '../products/IProduct';
 import { ProductService } from '../products/product.service';
 import { ProductBookService } from './product-book.service';
+import { IBookProduct } from './IBookProduct';
 
 @Component({
   selector: 'app-product-book',
@@ -13,13 +14,19 @@ export class ProductBookComponent implements OnInit {
   constructor(private productService: ProductService, private book: ProductBookService) { }
 
   products: IProduct[];
-
+  
   ngOnInit() {
     this.cargarData();
   }
 
-  bookProduct(productID: number) {
-    this.book.BookProduct(productID)
+  PlusbookProduct(productID: number) {
+    this.book.BookProduct(productID, 1)
+      .subscribe(product => this.cargarData(),
+        error => console.error(error));
+  }
+
+  MinusbookProduct(productID: number) {
+    this.book.BookProduct(productID, -1)
       .subscribe(product => this.cargarData(),
         error => console.error(error));
   }

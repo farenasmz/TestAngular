@@ -1,4 +1,5 @@
-﻿using Infraestructure.GenericRepository;
+﻿using Infraestructure.Dto;
+using Infraestructure.GenericRepository;
 using Infraestructure.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,142 +8,172 @@ using System.Transactions;
 
 namespace TestAngular.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
-    {
-        private readonly IProductRepository Repository;
-        private readonly IUserRepository UserRepository;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class ProductsController : ControllerBase
+	{
+		private readonly IProductRepository Repository;
+		private readonly IUserRepository UserRepository;
+		private readonly IBookProduct ProductRepository;
 
-        public ProductsController(IProductRepository repository, IUserRepository UserRepository)
-        {
-            Repository = repository;
-            this.UserRepository = UserRepository;
-        }
+		public ProductsController(IProductRepository repository, IUserRepository UserRepository, IBookProduct ProductRepository)
+		{
+			Repository = repository;
+			this.UserRepository = UserRepository;
+			this.ProductRepository = ProductRepository;
+		}
 
-        // GET: api/Products
-        [HttpGet]
-        public IActionResult GetProducts()
-        {
-            return this.Ok(this.Repository.GetAll());
-        }
+		// GET: api/Products
+		[HttpGet]
+		public IActionResult GetProducts()
+		{
+			return this.Ok(this.Repository.GetAll());
+		}
 
-        // GET: api/Products/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct([FromRoute] int id)
-        {
-            Product product;
+		// GET: api/Products/5
+		[HttpGet("{id}")]
+		public async Task<ActionResult<Product>> GetProduct([FromRoute] int id)
+		{
+			Product product;
 
-            try
-            {
-                product = await this.Repository.GetByIdAsync(id);
+			try
+			{
+				product = await this.Repository.GetByIdAsync(id);
 
-                if (product == null)
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+				if (product == null)
+				{
+					return NotFound();
+				}
+			}
+			catch (Exception)
+			{
+				return BadRequest();
+			}
 
-            return product;
-        }
+			return product;
+		}
 
-        // PUT: api/Products/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct([FromBody] Product product)
-        {
-            try
-            {
-                if (product == null)
-                {
-                    return NotFound();
-                }
+		// PUT: api/Products/5
+		[HttpPut("{id}")]
+		public async Task<IActionResult> PutProduct([FromBody] Product product)
+		{
+			try
+			{
+				if (product == null)
+				{
+					return NotFound();
+				}
 
-                await this.Repository.UpdateAsync(product);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
+				product.AvailableQuantity = product.Quantity;
+				await this.Repository.UpdateAsync(product);
+				return Ok();
+			}
+			catch (Exception)
+			{
+				return BadRequest();
+			}
+		}
 
-        [Route("Create")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBookProduct(int productID, string email)
-        {
-            Product product;
-            User user;
+		[HttpPost]
+		[Route("BookProduct")]
+		public async Task<IActionResult> BookProduct([FromBody] BookProductDto bookProduct)
+		{
+			Product product;
+			User user;
+			BookProduct book;
 
-            try
-            {
-                using (TransactionScope transaction = new TransactionScope())
-                {
-                    product = await this.Repository.GetByIdAsync(productID);
-                    user = await this.UserRepository.GetByEmail(email);
+			try
+			{
+				product = await this.Repository.GetByIdAsync(bookProduct.ProductId);
+				user = await this.UserRepository.GetByEmail(bookProduct.Email);
 
-                    if (product == null || user == null)
-                    {
-                        return NotFound();
-                    }
+				if (product == null || user == null)
+				{
+					return NotFound();
+				}
 
-                    if (product.Quantity == 0)
-                    {
-                        return BadRequest();
-                    }
+				if (product.AvailableQuantity == 0)
+				{
+					return BadRequest("There is no more quantity available");
+				}
 
-                    product.Quantity -= 1;
-                    await this.Repository.UpdateAsync(product);
-                }
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
+				book = this.ProductRepository.GetBookByPersonAndProduct(user.Id, product.Id);
+				
+				if (book == null)
+				{
+					book = new BookProduct();
+					book.ProductId = product.Id;
+					book.UserID = user.Id;
+					book.Quantity = 1;
+					product.AvailableQuantity -= 1;
+					await this.ProductRepository.CreateAsync(book);
+				}
 
-        // POST: api/Products
-        [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct([FromBody] Product product)
-        {
-            try
-            {
-                product.IsActive = true;
-                await this.Repository.CreateAsync(product);
-                return CreatedAtAction("GetProduct", new { id = product.Id }, product);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
+				if (bookProduct.Value < 0)
+				{
+					book.Quantity -= 1;
+					product.AvailableQuantity += 1;
+				}				
+				else
+				{
+					book.Quantity += 1;
+					product.AvailableQuantity -= 1;
+				}
 
-        // DELETE: api/Products/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteProduct(int id)
-        {
-            Product product;
-            try
-            {
-                product = await this.Repository.GetByIdAsync(id);
+				if (product.AvailableQuantity >= product.Quantity)
+				{
+					return BadRequest("There is no more quantity available");
+				}
 
-                if (product == null)
-                {
-                    return NotFound();
-                }
+				await this.ProductRepository.UpdateAsync(book);
+				await this.Repository.UpdateAsync(product);
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest();
+			}
+		}
 
-                product.IsActive = false;
-                await this.Repository.UpdateAsync(product);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
-    }
+		// POST: api/Products
+		[HttpPost]
+		public async Task<ActionResult<Product>> PostProduct([FromBody] Product product)
+		{
+			try
+			{
+				product.IsActive = true;
+				product.AvailableQuantity = product.Quantity;
+				await this.Repository.CreateAsync(product);
+				return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+			}
+			catch (Exception)
+			{
+				return BadRequest();
+			}
+		}
+
+		// DELETE: api/Products/5
+		[HttpDelete("{id}")]
+		public async Task<ActionResult<Product>> DeleteProduct(int id)
+		{
+			Product product;
+			try
+			{
+				product = await this.Repository.GetByIdAsync(id);
+
+				if (product == null)
+				{
+					return NotFound();
+				}
+
+				product.IsActive = false;
+				await this.Repository.UpdateAsync(product);
+				return Ok();
+			}
+			catch (Exception)
+			{
+				return BadRequest();
+			}
+		}
+	}
 }

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Infraestructure.GenericRepository;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Infraestructure.Models
 {
-    public class BookProduct
-    {
+    public class BookProduct : IEntity
+	{
         [Key]
         public int Id { get; set; }
 
@@ -14,7 +15,9 @@ namespace Infraestructure.Models
 
         public int UserID { get; set; }
 
-        public Product product { get; set; }
+		public int Quantity { get; set; }
+		
+		public Product product { get; set; }
         public User user { get; set; }
     }
 }
