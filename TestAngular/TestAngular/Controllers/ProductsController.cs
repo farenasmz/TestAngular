@@ -49,7 +49,7 @@ namespace TestAngular.Controllers
 
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(Product product)
+        public async Task<IActionResult> PutProduct([FromBody] Product product)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace TestAngular.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct([FromBody] Product product)
         {
             try
             {

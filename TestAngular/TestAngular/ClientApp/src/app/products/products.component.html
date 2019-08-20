@@ -1,0 +1,26 @@
+<h1>Products</h1>
+
+<button [routerLink]='["/products-add"]' class="btn btn-primary">Add product</button>
+
+<p *ngIf="!(products && products.length)">
+  No results.
+</p>
+
+<table class="table" *ngIf="products && products.length">
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{product.description}}</td>
+      <td>{{product.quantity}}</td>
+      <td>
+        <button class="btn btn-primary" [routerLink]='["/personas-editar/" + product.id]'>Edit</button>
+        <button class="btn btn-danger" (click)="delete(product)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
