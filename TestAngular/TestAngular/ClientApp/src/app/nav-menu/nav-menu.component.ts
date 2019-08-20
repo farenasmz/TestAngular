@@ -12,7 +12,7 @@ export class NavMenuComponent {
     private router: Router) { }
 
   isExpanded = false;
-
+  currentUser = localStorage.getItem("currentUser");
   collapse() {
     this.isExpanded = false;
   }

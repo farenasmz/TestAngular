@@ -15,6 +15,7 @@ export class RegisterComponent implements OnInit {
 
   public ErrorMessage: string;
   public currentUser: string;
+  public rol: number;
   
   constructor(private fb: FormBuilder,
     private accountService: AccountService,
@@ -25,6 +26,7 @@ export class RegisterComponent implements OnInit {
     this.formGroup = this.fb.group({
       email: '',
       password: '',
+      rol: '',
     });
   }
 
@@ -33,6 +35,7 @@ export class RegisterComponent implements OnInit {
     this.accountService.login(userInfo).subscribe(token => this.recibirToken(token),
       error => this.manejarError(error));
     this.currentUser = userInfo.email;
+    this.rol = userInfo.rol;
   }
 
   registrarse() {
@@ -45,6 +48,7 @@ export class RegisterComponent implements OnInit {
     localStorage.setItem('token', token.token);
     localStorage.setItem('tokenExpiration', token.expiration);
     localStorage.setItem('currentUser', this.currentUser);
+    localStorage.setItem('rol', this.rol.toString());
     this.router.navigate([""]);
   }
 

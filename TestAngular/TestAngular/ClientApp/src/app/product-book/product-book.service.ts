@@ -10,7 +10,6 @@ export class ProductBookService {
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
   
   BookProduct(productId: number, value: number): Observable<any> {
-    localStorage.setItem('currentUser', "farenas1@misena.edu.co");
     this.bookProduct.email = localStorage.getItem('currentUser');
     this.bookProduct.productId = productId;
     this.bookProduct.value = value;

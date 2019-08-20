@@ -1,4 +1,5 @@
 export interface IUserInfo {
   email: string,
-  password: string
+  password: string,
+  rol:number
 }

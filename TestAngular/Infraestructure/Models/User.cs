@@ -10,5 +10,6 @@ namespace Infraestructure.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public bool isActive { get; set; }
-    }
+		public int Rol { get; set; }
+	}
 }

@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IUserInfo } from './user-info';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AccountService {
@@ -10,7 +11,7 @@ export class AccountService {
   toastsSerivce: any;
   translateService: any;
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router) { }
 
   create(userInfo: IUserInfo): Observable<any> {
     return this.http.post<any>(this.apiURL + "/Create", userInfo)
@@ -31,6 +32,9 @@ export class AccountService {
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("tokenExpiration");
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("rol");
+    this.router.navigate(['']);
   }
 
   estaLogueado(): boolean {

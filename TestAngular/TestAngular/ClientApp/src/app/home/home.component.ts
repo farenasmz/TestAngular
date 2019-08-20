@@ -5,4 +5,9 @@ import { Component } from '@angular/core';
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
+  message: string;
+
+  constructor() {
+    this.message = localStorage.getItem("currentUser");
+  }
 }
