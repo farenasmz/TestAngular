@@ -23,8 +23,8 @@ export class UserService {
     return this.http.post<any>(this.apiURL + "/Create", user)
   }
 
-  updateUser(product: IUser): Observable<IUser> {
-    return this.http.put<IUser>(this.apiURL + "/", product);
+  updateUser(user: IUser): Observable<IUser> {
+    return this.http.put<IUser>(this.apiURL + "/", user);
   }
 
   deleteUser(userID: string): Observable<IUser> {

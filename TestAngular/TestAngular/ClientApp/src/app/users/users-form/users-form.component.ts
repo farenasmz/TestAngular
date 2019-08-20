@@ -52,6 +52,7 @@ export class UsersFormComponent implements OnInit {
     this.formGroup.patchValue({
       email: user.email,
       password: user.password,
+      isActive: user.isActive,
     });
   }
 

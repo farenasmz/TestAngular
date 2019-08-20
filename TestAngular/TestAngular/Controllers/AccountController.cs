@@ -136,7 +136,8 @@ namespace TestAngular.Controllers
                 {
                     return NotFound();
                 }
-                //user.Password = Security.sha256_hash(user.Password);
+
+                user.Password = Security.sha256_hash(user.Password);
                 await this.Repository.UpdateAsync(user);
                 return Ok();
             }

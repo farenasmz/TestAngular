@@ -3,6 +3,7 @@ using Infraestructure.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace TestAngular.Controllers
 {
@@ -11,10 +12,12 @@ namespace TestAngular.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductRepository Repository;
+        private readonly IUserRepository UserRepository;
 
-        public ProductsController(IProductRepository repository)
+        public ProductsController(IProductRepository repository, IUserRepository UserRepository)
         {
             Repository = repository;
+            this.UserRepository = UserRepository;
         }
 
         // GET: api/Products
@@ -59,6 +62,41 @@ namespace TestAngular.Controllers
                 }
 
                 await this.Repository.UpdateAsync(product);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("Create")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBookProduct(int productID, string email)
+        {
+            Product product;
+            User user;
+
+            try
+            {
+                using (TransactionScope transaction = new TransactionScope())
+                {
+                    product = await this.Repository.GetByIdAsync(productID);
+                    user = await this.UserRepository.GetByEmail(email);
+
+                    if (product == null || user == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (product.Quantity == 0)
+                    {
+                        return BadRequest();
+                    }
+
+                    product.Quantity -= 1;
+                    await this.Repository.UpdateAsync(product);
+                }
                 return Ok();
             }
             catch (Exception)

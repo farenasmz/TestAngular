@@ -14,7 +14,8 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class RegisterComponent implements OnInit {
 
   public ErrorMessage: string;
-
+  public currentUser: string;
+  
   constructor(private fb: FormBuilder,
     private accountService: AccountService,
     private router: Router) { }
@@ -31,6 +32,7 @@ export class RegisterComponent implements OnInit {
     let userInfo: IUserInfo = Object.assign({}, this.formGroup.value);
     this.accountService.login(userInfo).subscribe(token => this.recibirToken(token),
       error => this.manejarError(error));
+    this.currentUser = userInfo.email;
   }
 
   registrarse() {
@@ -42,6 +44,7 @@ export class RegisterComponent implements OnInit {
   recibirToken(token) {
     localStorage.setItem('token', token.token);
     localStorage.setItem('tokenExpiration', token.expiration);
+    localStorage.setItem('currentUser', this.currentUser);
     this.router.navigate([""]);
   }
 

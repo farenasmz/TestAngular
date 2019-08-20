@@ -26,7 +26,12 @@ namespace Infraestructure.Implementation
 
             return exist;
         }
-        
+
+        public Task<User> GetByEmail(string email)
+        {
+            return context.Users.Where(user => user.Email == email).FirstOrDefaultAsync();
+        }
+
         public Task<User> ValidateEmailAndPassword(string email, string password)
         {
             return context.Users.Where(user => user.Email == email && user.Password == password).FirstOrDefaultAsync();

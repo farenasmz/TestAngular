@@ -20,6 +20,8 @@ import { ProductsFormComponent } from './products/products-form/products-form.co
 import { UsersComponent } from './users/users.component';
 import { UserService } from './users/user.service';
 import { UsersFormComponent } from './users/users-form/users-form.component';
+import { ProductBookComponent } from './product-book/product-book.component';
+import { ProductBookService } from './product-book/product-book.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { UsersFormComponent } from './users/users-form/users-form.component';
     ProductsComponent,
     ProductsFormComponent,
     UsersComponent,
-    UsersFormComponent
+    UsersFormComponent,
+    ProductBookComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -49,13 +52,15 @@ import { UsersFormComponent } from './users/users-form/users-form.component';
       { path: 'products-edit/:id', component: ProductsFormComponent },
       { path: 'users', component: UsersComponent },
       { path: 'users-edit/:id', component: UsersFormComponent },
-      { path: 'users-add', component: UsersFormComponent},
+      { path: 'users-add', component: UsersFormComponent },
+      { path: 'product-book', component: ProductBookComponent},
     ])
   ],
   providers: [
     AuthGuardService,
     UserService,
     ProductService,
+    ProductBookService,
     AccountService,
     {
       provide: HTTP_INTERCEPTORS,
