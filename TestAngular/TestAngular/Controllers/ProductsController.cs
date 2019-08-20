@@ -26,7 +26,7 @@ namespace TestAngular.Controllers
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<Product>> GetProduct([FromRoute] int id)
         {
             Product product;
 
@@ -53,8 +53,6 @@ namespace TestAngular.Controllers
         {
             try
             {
-                product = await this.Repository.GetByIdAsync(product.Id);
-
                 if (product == null)
                 {
                     return NotFound();

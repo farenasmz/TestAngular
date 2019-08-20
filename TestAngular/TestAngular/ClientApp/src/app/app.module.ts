@@ -41,6 +41,7 @@ import { ProductsFormComponent } from './products/products-form/products-form.co
       { path: 'register-login', component: RegisterComponent },
       { path: 'products', component: ProductsComponent },
       { path: 'products-add', component: ProductsFormComponent },
+      { path: 'products-edit/:id', component: ProductsFormComponent },
     ])
   ],
   providers: [

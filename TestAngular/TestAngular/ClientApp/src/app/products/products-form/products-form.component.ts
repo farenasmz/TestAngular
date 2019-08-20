@@ -13,7 +13,6 @@ export class ProductsFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private productsService: ProductService,
-    //private direccionesService: DireccionesService,
     private router: Router,
     private activatedRoute: ActivatedRoute) { }
 
@@ -40,11 +39,9 @@ export class ProductsFormComponent implements OnInit {
       }
 
       this.modoEdicion = true;
-
       this.productId = params["id"];
-
       this.productsService.getProduct(this.productId.toString())
-        .subscribe(persona => this.cargarFormulario(persona),
+        .subscribe(product => this.cargarFormulario(product),
           error => this.router.navigate(["/products"]));
 
     });
@@ -52,10 +49,9 @@ export class ProductsFormComponent implements OnInit {
   }
 
   cargarFormulario(product: IProduct) {
-
     this.formGroup.patchValue({
-      description: product.Description,
-      quantity: product.Quantity,
+      description: product.description,
+      quantity: product.quantity,
     });
   }
 

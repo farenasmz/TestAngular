@@ -18,7 +18,7 @@ export class ProductsComponent implements OnInit {
   }
 
   delete(product: IProduct) {
-    this.productService.deleteProduct(product.Id.toString())
+    this.productService.deleteProduct(product.id.toString())
       .subscribe(product => this.cargarData(),
         error => console.error(error));
   }
