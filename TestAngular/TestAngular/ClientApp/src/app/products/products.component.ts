@@ -23,6 +23,10 @@ export class ProductsComponent implements OnInit {
         error => console.error(error));
   }
 
+  resetProduct(product: IProduct) {
+    this.productService.ResetProduct(product)
+  }
+
   cargarData() {
     this.productService.getProducts()
       .subscribe(productsWs => this.products = productsWs,

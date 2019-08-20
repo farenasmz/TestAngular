@@ -3,4 +3,5 @@ export interface IProduct {
   description: string;
   quantity: number;
   isActive: boolean;
+  availableQuantity: number;
 }

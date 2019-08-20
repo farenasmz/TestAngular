@@ -22,7 +22,8 @@
       <td>{{product.isActive ? 'Enable' : 'Disable'}}</td>
       <td>
         <button class="btn btn-primary" [routerLink]='["/products-edit/" + product.id]'>Edit</button>
-        <button class="btn btn-danger" (click)="delete(product)">Delete</button>
+        <button class="btn btn-warning" (click)="delete(product)">Delete</button>
+        <button class="btn btn-danger" (click)="resetProduct(product.id)">Reset Product</button>
       </td>
     </tr>
   </tbody>

@@ -1,5 +1,6 @@
 ﻿using Infraestructure.Dto;
 using Infraestructure.GenericRepository;
+using Infraestructure.Helpers;
 using Infraestructure.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -98,7 +99,7 @@ namespace TestAngular.Controllers
 				}
 
 				book = this.ProductRepository.GetBookByPersonAndProduct(user.Id, product.Id);
-				
+
 				if (book == null)
 				{
 					book = new BookProduct();
@@ -113,14 +114,14 @@ namespace TestAngular.Controllers
 				{
 					book.Quantity -= 1;
 					product.AvailableQuantity += 1;
-				}				
+				}
 				else
 				{
 					book.Quantity += 1;
 					product.AvailableQuantity -= 1;
 				}
 
-				if (product.AvailableQuantity >= product.Quantity)
+				if (product.AvailableQuantity > product.Quantity)
 				{
 					return BadRequest("There is no more quantity available");
 				}
@@ -132,6 +133,47 @@ namespace TestAngular.Controllers
 			catch (Exception ex)
 			{
 				return BadRequest();
+			}
+		}
+
+
+		[HttpPost]
+		[Route("ResetProduct")]
+		public async Task<IActionResult> ResetProductAsync(int productId, [FromBody] User user)
+		{
+			Product product;
+			User tmpUser;
+
+			try
+			{
+				user.Password = Security.sha256_hash(user.Password);
+				tmpUser = await UserRepository.ValidateEmailAndPassword(user.Email, user.Password);
+
+				if (tmpUser != null)
+				{
+					if (tmpUser.isActive)
+					{
+						product = await this.Repository.GetByIdAsync(productId);
+
+						using (TransactionScope transaction = new TransactionScope())
+						{
+							this.ProductRepository.ResetProduct(product.Id);
+							this.Repository.ResetProductQuantity(product.Id, product.Quantity);
+							transaction.Complete();
+							return Ok();
+						}
+					}
+					else
+					{
+						return BadRequest("Blocked user.");
+					}
+				}
+
+				return BadRequest("Wrong Password");
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
 			}
 		}
 

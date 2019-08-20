@@ -1,11 +1,9 @@
 ﻿using Infraestructure.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infraestructure.GenericRepository
 {
-    public interface IProductRepository: IGenericRepository<Product>
-    {
-    }
+	public interface IProductRepository : IGenericRepository<Product>
+	{
+		void ResetProductQuantity(int productId, int quantity);
+	}
 }

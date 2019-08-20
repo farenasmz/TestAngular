@@ -58,7 +58,7 @@ import { ProductBookService } from './product-book/product-book.service';
   ],
   providers: [
     AuthGuardService,
-    UserService,
+     UserService,
     ProductService,
     ProductBookService,
     AccountService,

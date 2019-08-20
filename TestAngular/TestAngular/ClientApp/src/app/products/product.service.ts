@@ -24,10 +24,14 @@ export class ProductService {
   }
 
   updateProduct(product: IProduct): Observable<IProduct> {
-    return this.http.put<IProduct>(this.apiURL + "/" + product.Id.toString(), product);
+    return this.http.put<IProduct>(this.apiURL + "/" + product.id.toString(), product);
   }
 
   deleteProduct(productID: string): Observable<IProduct> {
     return this.http.delete<IProduct>(this.apiURL + "/" + productID);
+  }
+
+  ResetProduct(product: IProduct) {
+    return this.http.post(this.apiURL + "/ResetProduct", product);
   }
 }
