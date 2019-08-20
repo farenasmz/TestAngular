@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +31,14 @@ namespace TestAngular.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
-            return this.Ok(this.Repository.GetAll());
+            List<User> result = this.Repository.GetAll().ToList();
+
+            foreach (var item in result)
+            {
+                item.Password = string.Empty;
+            }
+
+            return this.Ok(result);
         }
 
         [HttpGet("{id}")]

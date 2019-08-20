@@ -1,12 +1,12 @@
-<h1>Users</h1>
+<h1>Products</h1>
 
-<button [routerLink]='["/users-add"]' class="btn btn-primary">Add User</button>
+<button [routerLink]='["/products-add"]' class="btn btn-primary">Add product</button>
 
-<p *ngIf="!(users && users.length)">
+<p *ngIf="!(Datausers && Datausers.length)">
   No results.
 </p>
 
-<table class="table" *ngIf="user && users.length">
+<table class="table">
   <thead>
     <tr>
       <th>Email</th>
@@ -15,11 +15,11 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of users">
+    <tr *ngFor="let user of Datausers">
       <td>{{user.email}}</td>
       <td>{{user.isActive ? 'Enable' : 'Disable'}}</td>
       <td>
-        <button class="btn btn-primary" [routerLink]='["/user-edit/" + user.id]'>Edit</button>
+        <button class="btn btn-primary" [routerLink]='["/products-edit/" + user.id]'>Edit</button>
         <button class="btn btn-danger" (click)="delete(user)">Delete</button>
       </td>
     </tr>

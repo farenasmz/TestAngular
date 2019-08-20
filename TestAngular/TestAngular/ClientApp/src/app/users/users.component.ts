@@ -9,7 +9,7 @@ import { UserService } from './user.service';
 })
 export class UsersComponent implements OnInit {
 
-  users: IUser[];
+  Datausers: IUser[];
 
   constructor(private userService: UserService) { }
 
@@ -17,15 +17,20 @@ export class UsersComponent implements OnInit {
     this.cargarData();
   }
 
-  delete(product: IUser) {
-    this.userService.deleteUser(product.id.toString())
+  delete(user: IUser) {
+    this.userService.deleteUser(user.Id.toString())
       .subscribe(product => this.cargarData(),
         error => console.error(error));
   }
 
   cargarData() {
-    this.userService.getUsers()
-      .subscribe(Ws => this.users = Ws,
-        error => console.error(error));
+   
+
+    this.userService.getUsers().subscribe((data: IUser[]) => {
+      this.Datausers = data;
+      console.log("Ahora");
+      console.log(this.Datausers);
+    });
+
   }
 }

@@ -25,7 +25,7 @@ export class ProductsComponent implements OnInit {
 
   cargarData() {
     this.productService.getProducts()
-      .subscribe(productsWs=> this.products = productsWs,
+      .subscribe(productsWs => this.products = productsWs,
         error => console.error(error));
   }
 }

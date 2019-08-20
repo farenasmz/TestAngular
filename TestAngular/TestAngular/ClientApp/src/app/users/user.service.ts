@@ -24,7 +24,7 @@ export class UserService {
   }
 
   updateUser(product: IUser): Observable<IUser> {
-    return this.http.put<IUser>(this.apiURL + "/" + product.id.toString(), product);
+    return this.http.put<IUser>(this.apiURL + "/" + product.Id.toString(), product);
   }
 
   deleteUser(userID: string): Observable<IUser> {
