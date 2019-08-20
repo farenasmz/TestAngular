@@ -17,6 +17,8 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { ProductsComponent } from './products/products.component';
 import { ProductService } from './products/product.service';
 import { ProductsFormComponent } from './products/products-form/products-form.component';
+import { UsersComponent } from './users/users.component';
+import { UserService } from './users/user.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { ProductsFormComponent } from './products/products-form/products-form.co
     FetchDataComponent,
     RegisterComponent,
     ProductsComponent,
-    ProductsFormComponent
+    ProductsFormComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -42,10 +45,13 @@ import { ProductsFormComponent } from './products/products-form/products-form.co
       { path: 'products', component: ProductsComponent },
       { path: 'products-add', component: ProductsFormComponent },
       { path: 'products-edit/:id', component: ProductsFormComponent },
+      { path: 'users', component: UsersComponent },
+      //{ path: 'users-edit/:id', component: UsersFormComponent },
     ])
   ],
   providers: [
     AuthGuardService,
+    UserService,
     ProductService,
     AccountService,
     {

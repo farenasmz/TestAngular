@@ -1,0 +1,27 @@
+<h1>Users</h1>
+
+<button [routerLink]='["/users-add"]' class="btn btn-primary">Add User</button>
+
+<p *ngIf="!(users && users.length)">
+  No results.
+</p>
+
+<table class="table" *ngIf="user && users.length">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.email}}</td>
+      <td>{{user.isActive ? 'Enable' : 'Disable'}}</td>
+      <td>
+        <button class="btn btn-primary" [routerLink]='["/user-edit/" + user.id]'>Edit</button>
+        <button class="btn btn-danger" (click)="delete(user)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

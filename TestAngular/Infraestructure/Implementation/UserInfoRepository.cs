@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructure.Implementation
 {
-    public class UserInfoRepository : GenericRepository<UserInfo>, IUserRepository
+    public class UserInfoRepository : GenericRepository<User>, IUserRepository
     {
         private readonly DataContext context;
         public UserInfoRepository(DataContext context) : base(context)
@@ -17,7 +17,7 @@ namespace Infraestructure.Implementation
         public bool ValidateEmail(string email)
         {
             bool exist = false;
-            UserInfo tmpUser = context.Users.Where(user => user.Email == email).FirstOrDefault();
+            User tmpUser = context.Users.Where(user => user.Email == email).FirstOrDefault();
 
             if (tmpUser != null)
             {
@@ -27,7 +27,7 @@ namespace Infraestructure.Implementation
             return exist;
         }
         
-        public Task<UserInfo> ValidateEmailAndPassword(string email, string password)
+        public Task<User> ValidateEmailAndPassword(string email, string password)
         {
             return context.Users.Where(user => user.Email == email && user.Password == password).FirstOrDefaultAsync();
         }

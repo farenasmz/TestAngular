@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.GenericRepository
 {
-    public interface IUserRepository : IGenericRepository<UserInfo>
+    public interface IUserRepository : IGenericRepository<User>
     {
-        Task<UserInfo> ValidateEmailAndPassword(string email, string password);
+        Task<User> ValidateEmailAndPassword(string email, string password);
         bool ValidateEmail(string email);
     }
 }

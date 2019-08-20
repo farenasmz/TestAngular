@@ -26,9 +26,37 @@ namespace TestAngular.Controllers
             Repository = repository;
         }
 
+        [HttpGet]
+        public IActionResult GetUsers()
+        {
+            return this.Ok(this.Repository.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetProduct([FromRoute] int id)
+        {
+            User user;
+
+            try
+            {
+                user = await this.Repository.GetByIdAsync(id);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return user;
+        }
+
         [Route("Create")]
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserInfo model)
+        public async Task<IActionResult> CreateUser([FromBody] User model)
         {
             if (ModelState.IsValid)
             {
@@ -57,20 +85,20 @@ namespace TestAngular.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] UserInfo userInfo)
+        public async Task<IActionResult> Login([FromBody] User User)
         {
-            UserInfo tmpUserInfo;
+            User tmpUser;
 
             if (ModelState.IsValid)
             {
-                userInfo.Password = Security.sha256_hash(userInfo.Password);
-                tmpUserInfo = await Repository.ValidateEmailAndPassword(userInfo.Email, userInfo.Password);    
+                User.Password = Security.sha256_hash(User.Password);
+                tmpUser = await Repository.ValidateEmailAndPassword(User.Email, User.Password);    
 
-                if (tmpUserInfo != null)
+                if (tmpUser != null)
                 {
-                    if (tmpUserInfo.isActive)
+                    if (tmpUser.isActive)
                     {
-                        return BuildToken(userInfo);
+                        return BuildToken(User);
                     }
                     else
                     {
@@ -89,7 +117,25 @@ namespace TestAngular.Controllers
             }
         }
 
-        private IActionResult BuildToken(UserInfo userInfo)
+        public async Task<IActionResult> PutUser([FromBody] User user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                await this.Repository.UpdateAsync(user);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        private IActionResult BuildToken(User User)
         {
             Claim[] claims;
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SuperKey"]));
@@ -99,7 +145,7 @@ namespace TestAngular.Controllers
 
             claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, User.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

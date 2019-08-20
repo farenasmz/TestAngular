@@ -44,18 +44,6 @@ namespace TestAngular
 
             services.AddScoped<IUserRepository, UserInfoRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-
-            services.AddIdentity<ApplicationUser, IdentityRole>(cfg =>
-            {
-                cfg.User.RequireUniqueEmail = true;
-                cfg.Password.RequireDigit = false;
-                cfg.Password.RequiredUniqueChars = 0;
-                cfg.Password.RequireLowercase = false;
-                cfg.Password.RequireNonAlphanumeric = false;
-                cfg.Password.RequireUppercase = false;
-                cfg.Password.RequiredLength = 6;
-            }).AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(options =>
                options.TokenValidationParameters = new TokenValidationParameters

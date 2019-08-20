@@ -62,7 +62,7 @@ export class ProductsFormComponent implements OnInit {
 
     if (this.modoEdicion) {
       // editar el registro
-      product.Id = this.productId;
+      product.id = this.productId;
       this.productsService.updateProduct(product)
         .subscribe(product => this.onSaveSuccess(),
           error => console.error(error));
