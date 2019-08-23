@@ -2,6 +2,8 @@
 using Infraestructure.GenericRepository;
 using Infraestructure.Helpers;
 using Infraestructure.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ using System.Transactions;
 
 namespace TestAngular.Controllers
 {
+	[Authorize(ActiveAuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ProductsController : ControllerBase
