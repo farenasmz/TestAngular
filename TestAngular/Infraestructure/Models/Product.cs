@@ -13,7 +13,7 @@ namespace Infraestructure.Models
 
         public Int32 Quantity { get; set; }
 
-		public Int32 AvailableQuantity { get; set; }
+		public Int32? AvailableQuantity { get; set; }
 
 		public bool IsActive { get; set; }
     }

@@ -28,7 +28,7 @@ namespace TestAngular.Controllers
 		[HttpGet]
 		public IActionResult GetProducts()
 		{
-			return this.Ok(this.Repository.GetAll());
+            return this.Ok(this.Repository.GetAll());
 		}
 
 		// GET: api/Products/5
@@ -188,7 +188,7 @@ namespace TestAngular.Controllers
 				await this.Repository.CreateAsync(product);
 				return CreatedAtAction("GetProduct", new { id = product.Id }, product);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				return BadRequest();
 			}
