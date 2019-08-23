@@ -20,7 +20,7 @@ export class UsersComponent implements OnInit {
   delete(userid: number) {
     this.userService.deleteUser(userid.toString())
       .subscribe(product => this.cargarData(),
-        error => console.error(error));
+        error => alert(error));
   }
 
   cargarData() {

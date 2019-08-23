@@ -65,17 +65,18 @@ export class ProductsFormComponent implements OnInit {
       product.id = this.productId;
       this.productsService.updateProduct(product)
         .subscribe(product => this.onSaveSuccess(),
-          error => console.error(error));
+          error => alert(error));
     } else {
       // agregar el registro
 
       this.productsService.createProduct(product)
         .subscribe(persona => this.onSaveSuccess(),
-          error => console.error(error));
+          error => alert(error));
     }
   }
 
   onSaveSuccess() {
+  alert("All ok")
     this.router.navigate(["/products"]);
   }
 }

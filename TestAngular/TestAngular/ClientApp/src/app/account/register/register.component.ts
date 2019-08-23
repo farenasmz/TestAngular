@@ -54,6 +54,7 @@ export class RegisterComponent implements OnInit {
 
   manejarError(error) {
     if (error && error.error) {
+      alert(error);
       this.ErrorMessage = (error.error[0].description);
     }
   }

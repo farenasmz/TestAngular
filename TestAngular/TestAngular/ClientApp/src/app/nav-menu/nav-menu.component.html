@@ -7,7 +7,7 @@
         <span class='icon-bar'></span>
         <span class='icon-bar'></span>
       </button>
-      <a class='navbar-brand' [routerLink]='["/"]'>Bienvenido {{currentUser}}</a>
+      <a class='navbar-brand' [routerLink]='["/"]'>Welcome! {{currentUser}}</a>
     </div>
     <div class='clearfix'></div>
     <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
@@ -24,7 +24,7 @@
         </li>
         <li [routerLinkActive]='["link-active"]'>
           <a [routerLink]='["/fetch-data"]' (click)='collapse()'>
-            <span class='glyphicon glyphicon-th-list'></span> Fetch data
+            <span class='glyphicon glyphicon-list-alt'></span> Fetch data
           </a>
         </li>
 
@@ -36,17 +36,17 @@
 
         <li [routerLinkActive]='["link-active"]'>
           <a [routerLink]='["/products"]' (click)='collapse()'>
-            <span class='glyphicon glyphicon-th-list'></span> Products
+            <span class='glyphicon glyphicon-inbox'></span> Products
           </a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
           <a [routerLink]='["/product-book"]' (click)='collapse()'>
-            <span class='glyphicon glyphicon-th-list'></span> Product Book
+            <span class='glyphicon  glyphicon-list-alt'></span> Product Book
           </a>
         </li>
         <li [routerLinkActive]='["link-active"]'>
           <a [routerLink]='["/logs"]' (click)='collapse()'>
-            <span class='glyphicon glyphicon-th-list'></span> User's Log
+            <span class='glyphicon glyphicon-edit'></span> User's Log
           </a>
         </li>
         <li *ngIf="!estaLogueado()" [routerLinkActive]='["link-active"]'>
@@ -56,7 +56,7 @@
         </li>
         <li *ngIf="estaLogueado()" [routerLinkActive]='["link-active"]'>
           <a (click)='logout()'>
-            <span class='glyphicon glyphicon-th-list'></span> Logout
+            <span class='glyphicon  glyphicon-ban-circle'></span> Logout
           </a>
         </li>
       </ul>

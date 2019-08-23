@@ -48,10 +48,11 @@ export class ProductPasswordComponent implements OnInit {
     let user: IUser = Object.assign({}, this.formGroup.value);
     this.Service.ResetProduct(this.productId, user)
       .subscribe(persona => this.onSaveSuccess(),
-        error => console.error(error));
+        error => alert(error));
   }
 
   onSaveSuccess() {
+    alert("All Ok")
     this.router.navigate
     this.router.navigate(["products"]);
   }

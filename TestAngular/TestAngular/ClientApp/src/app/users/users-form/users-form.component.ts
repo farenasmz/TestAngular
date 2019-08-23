@@ -66,17 +66,18 @@ export class UsersFormComponent implements OnInit {
       user.id = this.userID;
       this.Service.updateUser(user)
         .subscribe(user => this.onSaveSuccess(),
-          error => console.error(error));
+          error => alert(error));
     } else {
       // agregar el registro
 
       this.Service.createUser(user)
         .subscribe(persona => this.onSaveSuccess(),
-          error => console.error(error));
+          error => alert(error));
     }
   }
 
   onSaveSuccess() {
+    alert("All okey");
     this.router.navigate
     this.router.navigate(["users"]);
   }
