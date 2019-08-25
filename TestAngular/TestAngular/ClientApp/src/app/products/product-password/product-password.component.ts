@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IUser } from '../../users/IUser';
 import { ProductPasswordService } from '../product-password.service';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
   selector: 'app-product-password',
@@ -14,8 +15,10 @@ export class ProductPasswordComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private Service: ProductPasswordService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
-
+    private activatedRoute: ActivatedRoute, private alert: AlertService) {
+    this.alertService = alert;
+  }
+  alertService: AlertService;
   formGroup: FormGroup;
   userID: number;
   productId: number;
@@ -48,11 +51,11 @@ export class ProductPasswordComponent implements OnInit {
     let user: IUser = Object.assign({}, this.formGroup.value);
     this.Service.ResetProduct(this.productId, user)
       .subscribe(persona => this.onSaveSuccess(),
-        error => alert(error));
+        error => this.alertService.ShowErrorAlert(error));
   }
 
   onSaveSuccess() {
-    alert("All Ok")
+    this.alertService.ShowSuccessAlert();
     this.router.navigate
     this.router.navigate(["products"]);
   }

@@ -34,6 +34,7 @@ export class AccountService {
     localStorage.removeItem("tokenExpiration");
     localStorage.removeItem("currentUser");
     localStorage.removeItem("rol");
+    window.location.reload();
     this.router.navigate(['']);
   }
 
@@ -53,6 +54,8 @@ export class AccountService {
       // ya expiró el token
       localStorage.removeItem('token');
       localStorage.removeItem('tokenExpiration');
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("rol");
       return false;
     } else {
       return true;

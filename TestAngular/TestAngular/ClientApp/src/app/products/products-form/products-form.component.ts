@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ProductService } from '../product.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IProduct } from '../IProduct';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
   selector: 'app-products-form',
@@ -14,9 +15,11 @@ export class ProductsFormComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private productsService: ProductService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute, private alert: AlertService) {
+    this.alertService = alert;
+  }
 
-
+  alertService: AlertService;
   modoEdicion: boolean = false;
   formGroup: FormGroup;
   productId: number;
@@ -42,8 +45,7 @@ export class ProductsFormComponent implements OnInit {
       this.productId = params["id"];
       this.productsService.getProduct(this.productId.toString())
         .subscribe(product => this.cargarFormulario(product),
-          error => this.router.navigate(["/products"]));
-
+          error => this.alertService.ShowErrorAlert(error));
     });
 
   }
@@ -65,18 +67,18 @@ export class ProductsFormComponent implements OnInit {
       product.id = this.productId;
       this.productsService.updateProduct(product)
         .subscribe(product => this.onSaveSuccess(),
-          error => alert(error));
+          error => this.alertService.ShowErrorAlert(error));
     } else {
       // agregar el registro
 
       this.productsService.createProduct(product)
         .subscribe(persona => this.onSaveSuccess(),
-          error => alert(error));
+          error => this.alertService.ShowErrorAlert(error));
     }
   }
 
   onSaveSuccess() {
-  alert("All ok")
+    this.alertService.ShowSuccessAlert();
     this.router.navigate(["/products"]);
   }
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IUser } from '../IUser';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
   selector: 'app-users-form',
@@ -14,9 +15,11 @@ export class UsersFormComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private Service: UserService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute, private alert: AlertService) {
+    this.alertService = this.alert;
+  }
 
-
+  alertService: AlertService;
   modoEdicion: boolean = false;
   formGroup: FormGroup;
   userID: number;
@@ -66,18 +69,18 @@ export class UsersFormComponent implements OnInit {
       user.id = this.userID;
       this.Service.updateUser(user)
         .subscribe(user => this.onSaveSuccess(),
-          error => alert(error));
+          error => this.alertService.ShowErrorAlert(error));
     } else {
       // agregar el registro
 
       this.Service.createUser(user)
         .subscribe(persona => this.onSaveSuccess(),
-          error => alert(error));
+          error => this.alertService.ShowErrorAlert(error));
     }
   }
 
   onSaveSuccess() {
-    alert("All okey");
+    this.alertService.ShowSuccessAlert()
     this.router.navigate
     this.router.navigate(["users"]);
   }
