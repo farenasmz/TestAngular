@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AccountService } from '../account/account.service';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,16 @@ import { Component } from '@angular/core';
 export class HomeComponent {
   message: string;
 
-  constructor() {
+  constructor(private accountService: AccountService) {
     this.message = localStorage.getItem("currentUser");
+  }
+
+  logout() {
+    this.accountService.logout();
+    this.message = "";
+  }
+
+  estaLogueado() {
+    return this.accountService.estaLogueado();
   }
 }

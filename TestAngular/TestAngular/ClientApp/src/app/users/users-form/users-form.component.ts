@@ -34,6 +34,8 @@ export class UsersFormComponent implements OnInit {
     this.formGroup = this.fb.group({
       email: '',
       password: '',
+      isActive: '',
+      rol: ''
     });
 
     this.activatedRoute.params.subscribe(params => {
@@ -46,7 +48,6 @@ export class UsersFormComponent implements OnInit {
       this.Service.getUser(this.userID.toString())
         .subscribe(product => this.cargarFormulario(product),
           error => this.router.navigate(["/Account"]));
-
     });
 
   }
@@ -56,6 +57,7 @@ export class UsersFormComponent implements OnInit {
       email: user.email,
       password: user.password,
       isActive: user.isActive,
+      rol: user.rol
     });
   }
 
@@ -71,8 +73,12 @@ export class UsersFormComponent implements OnInit {
         .subscribe(user => this.onSaveSuccess(),
           error => this.alertService.ShowErrorAlert(error));
     } else {
-      // agregar el registro
-
+      // agregar el registro.
+      if (user.password == "") {
+        this.alertService.ShowErrorAlert("Password is required");
+        return;
+      }
+      user.isActive = true;
       this.Service.createUser(user)
         .subscribe(persona => this.onSaveSuccess(),
           error => this.alertService.ShowErrorAlert(error));

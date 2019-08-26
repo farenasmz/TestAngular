@@ -11,10 +11,10 @@ using System.Transactions;
 
 namespace TestAngular.Controllers
 {
-	[Authorize(ActiveAuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ProductsController : ControllerBase
+    public class ProductsController : ControllerBase
 	{
 		private readonly IProductRepository Repository;
 		private readonly IUserRepository UserRepository;
@@ -96,7 +96,7 @@ namespace TestAngular.Controllers
 					return NotFound();
 				}
 
-				if (product.AvailableQuantity == 0)
+				if (product.AvailableQuantity <= 0)
 				{
 					return BadRequest("There is no more quantity available");
 				}
@@ -135,7 +135,7 @@ namespace TestAngular.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace TestAngular.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 

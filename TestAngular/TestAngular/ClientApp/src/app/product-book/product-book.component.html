@@ -4,7 +4,7 @@
   No results.
 </p>
 
-<table class="table" *ngIf="products && products.length">
+<table class="table" id="dataTable" *ngIf="products && products.length">
   <thead>
     <tr>
       <th>Description</th>
@@ -19,8 +19,8 @@
       <td>{{product.availableQuantity}}</td>
       <td>{{product.isActive ? 'Enable' : 'Disable'}}</td>
       <td>
-        <button class="btn btn-success" (click)="PlusbookProduct(product.id)">Reservation / +</button>
-        <button class="btn btn-warning" (click)="MinusbookProduct(product.id)">Delete reservation / -</button>
+        <button [disabled]="!product.isActive" class="btn btn-success" (click)="PlusbookProduct(product.id)">Reservation / +</button>
+        <button [disabled]="!product.isActive" class="btn btn-warning" (click)="MinusbookProduct(product.id)">Delete reservation / -</button>
       </td>
     </tr>
   </tbody>

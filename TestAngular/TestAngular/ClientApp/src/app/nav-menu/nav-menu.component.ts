@@ -24,6 +24,7 @@ export class NavMenuComponent {
   logout() {
     this.accountService.logout();
     this.router.navigate(['/']);
+    this.currentUser = "";
   }
 
   estaLogueado() {

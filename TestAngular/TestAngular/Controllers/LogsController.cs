@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TestAngular.Controllers
 {
-	[Authorize(ActiveAuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class LogsController : ControllerBase

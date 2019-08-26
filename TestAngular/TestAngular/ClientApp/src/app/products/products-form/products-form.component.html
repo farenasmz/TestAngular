@@ -40,14 +40,31 @@
         </span>
       </div>
     </div>
-       
+
+    <div *ngIf="modoEdicion" class="form-group">
+      <label class="col-md-2 control-label"
+             for="rol">Status</label>
+      <div class="col-md-8">
+        <select class="form-control" required id="isActive" formControlName="isActive">
+          <option value="" selected="selected">[Select status]</option>
+          <option value="true">Enable</option>
+          <option value="false"> Disable</option>
+        </select>
+        <span class="help-block" *ngIf="(formGroup.get('isActive').touched || formGroup.get('isActive').dirty) && formGroup.get('isActive').errors">
+          <span *ngIf="formGroup.get('isActive').errors.required">
+            Required
+          </span>
+        </span>
+      </div>
+    </div>
+
     <div class="form-group">
       <div class="col-md-4 col-md-offset-2">
         <span>
           <button class="btn btn-primary"
                   type="submit"
                   [disabled]="!formGroup.valid">
-           Save
+            Save
           </button>
           <button class="btn"
                   type="button"

@@ -39,7 +39,6 @@ export class RegisterComponent implements OnInit {
     this.accountService.login(userInfo).subscribe(token => this.recibirToken(token),
       error => this.alertService.ShowErrorAlert(error));
     this.currentUser = userInfo.email;
-    this.rol = userInfo.rol;
   }
 
   registrarse() {
@@ -52,15 +51,13 @@ export class RegisterComponent implements OnInit {
     this.accountService.create(userInfo).subscribe(token => this.recibirToken(token),
       error => this.alertService.ShowErrorAlert(error));
     this.alertService.ShowSuccessAlert();
-    localStorage.setItem("currentUser", userInfo.email);
-    localStorage.setItem("rol", String(userInfo.rol));
   }
 
-  recibirToken(token) {
-    localStorage.setItem('token', token.token);
-    localStorage.setItem('tokenExpiration', token.expiration);
+  recibirToken(token: IUserInfo) {
+    localStorage.setItem('token', token.webToken);
+    localStorage.setItem('tokenExpiration', String(token.expiration));
     localStorage.setItem('currentUser', this.currentUser);
-    localStorage.setItem('rol', String(this.rol));
+    localStorage.setItem('rol', String(token.rol));
     this.router.navigate([""]);
   }
 

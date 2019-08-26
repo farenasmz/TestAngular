@@ -34,6 +34,7 @@ export class ProductsFormComponent implements OnInit {
     this.formGroup = this.fb.group({
       description: '',
       quantity: '',
+      isActive:''
     });
 
     this.activatedRoute.params.subscribe(params => {
@@ -54,13 +55,13 @@ export class ProductsFormComponent implements OnInit {
     this.formGroup.patchValue({
       description: product.description,
       quantity: product.quantity,
+      isActive: product.isActive,
     });
   }
 
   save() {
     this.ignorarExistenCambiosPendientes = true;
     let product: IProduct = Object.assign({}, this.formGroup.value);
-    console.table(product);
 
     if (this.modoEdicion) {
       // editar el registro
