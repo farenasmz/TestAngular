@@ -74,7 +74,7 @@ namespace TestAngular.Controllers
 			}
 			catch (Exception)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest();
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace TestAngular.Controllers
 			}
 			catch (Exception)
 			{
-				return BadRequest(ex.Message);
+				return BadRequest();
 			}
 		}
 

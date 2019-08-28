@@ -97,8 +97,6 @@ namespace TestAngular.Controllers
 
         public async Task<IActionResult> PutUser([FromBody] User user)
         {
-            User tmpUser;
-
             try
             {
                 if (user == null)
