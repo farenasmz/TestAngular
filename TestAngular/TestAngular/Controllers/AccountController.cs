@@ -1,4 +1,6 @@
-﻿using Infraestructure.GenericRepository;
+﻿using Core.Users;
+using Infraestructure.Dto;
+using Infraestructure.GenericRepository;
 using Infraestructure.Helpers;
 using Infraestructure.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,71 +23,52 @@ namespace TestAngular.Controllers
 	[ApiController]
 	public class AccountController : ControllerBase
 	{
-		private readonly IConfiguration _configuration;
-		private readonly IUserRepository Repository;
-		private readonly ILog LogRepository;
+		private readonly IConfiguration Configuration;
+		private readonly UsersBussiness UserBusiness;
 
 		public AccountController(IUserRepository repository, IConfiguration iConfiguration, ILog logRepository)
 		{
-			this._configuration = iConfiguration;
-			Repository = repository;
-			this.LogRepository = logRepository;
+			this.Configuration = iConfiguration;
+			UserBusiness = new UsersBussiness(repository, logRepository);
 		}
 
 		[HttpGet]
 		public IActionResult GetUsers()
 		{
-			List<User> result = this.Repository.GetAll().ToList();
-
-			foreach (var item in result)
-			{
-				item.Password = string.Empty;
-			}
-
-			return this.Ok(result);
+			return this.Ok(UserBusiness.GetAllUsers());
 		}
 
 		[HttpGet("{id}")]
-		public async Task<ActionResult<User>> GetProduct([FromRoute] int id)
+		public async Task<ActionResult<User>> GetUser([FromRoute] int id)
 		{
-			User user;
-
 			try
 			{
-				user = await this.Repository.GetByIdAsync(id);
-
-				if (user == null)
-				{
-					return NotFound();
-				}
-
-				user.Password = string.Empty;
+				return await this.UserBusiness.GetUserById(id);
 			}
 			catch (Exception)
 			{
 				return BadRequest();
 			}
-
-			return user;
 		}
 
 		[Route("Create")]
 		[HttpPost]
 		public async Task<IActionResult> CreateUser([FromBody] User model)
 		{
+			jwtDto result;
+
 			if (ModelState.IsValid)
 			{
 				try
 				{
-					if (Repository.ValidateEmail(model.Email))
+					result = await UserBusiness.CreateUser(model, Configuration["SuperKey"]);
+					
+					if (result == null)
 					{
 						return BadRequest("Email already registered.");
 					}
 
-					model.isActive = true;
-					model.Password = Security.sha256_hash(model.Password);
-					await Repository.CreateAsync(model);
-					return BuildToken(model);
+					return Ok(result);
 				}
 				catch (Exception)
 				{
@@ -102,38 +85,9 @@ namespace TestAngular.Controllers
 		[Route("Login")]
 		public async Task<IActionResult> Login([FromBody] User User)
 		{
-			User tmpUser;
-
 			if (ModelState.IsValid)
 			{
-				User.Password = Security.sha256_hash(User.Password);
-				tmpUser = await Repository.ValidateEmailAndPassword(User.Email, User.Password);
-
-				if (tmpUser != null)
-				{
-					if (tmpUser.isActive)
-					{
-						try
-						{
-							await LogRepository.CreateLogAsync(tmpUser, "Inicio de sesión");
-						}
-						catch (Exception)
-						{
-							string n;
-						}
-
-						return BuildToken(User);
-					}
-					else
-					{
-						return BadRequest("Blocked user.");
-					}
-				}
-				else
-				{
-					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-					return BadRequest(ModelState);
-				}
+				return Ok(await UserBusiness.Login(User, Configuration["SuperKey"]));
 			}
 			else
 			{
@@ -150,8 +104,7 @@ namespace TestAngular.Controllers
 					return NotFound();
 				}
 
-				user.Password = Security.sha256_hash(user.Password);
-				await this.Repository.UpdateAsync(user);
+				await UserBusiness.UpdateUser(user);
 				return Ok();
 			}
 			catch (Exception)
@@ -163,53 +116,15 @@ namespace TestAngular.Controllers
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<Product>> DeleteUser(int id)
 		{
-			User user;
-
 			try
 			{
-				user = await this.Repository.GetByIdAsync(id);
-
-				if (user == null)
-				{
-					return NotFound();
-				}
-
-				user.isActive = false;
-				await this.Repository.UpdateAsync(user);
+				await UserBusiness.DisableUser(id);
 				return Ok();
 			}
 			catch (Exception)
 			{
 				return BadRequest();
 			}
-		}
-
-		private IActionResult BuildToken(User User)
-		{
-			Claim[] claims;
-			SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SuperKey"]));
-			SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-			DateTime expiration = DateTime.UtcNow.AddHours(1);
-			JwtSecurityToken token;
-
-			claims = new[]
-			{
-				new Claim(JwtRegisteredClaimNames.UniqueName, User.Email),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-			};
-
-			token = new JwtSecurityToken(
-			   issuer: "yourdomain.com",
-			   audience: "yourdomain.com",
-			   claims: claims,
-			   expires: expiration,
-			   signingCredentials: creds);
-
-			return Ok(new
-			{
-				token = new JwtSecurityTokenHandler().WriteToken(token),
-				expiration
-			});
 		}
 	}
 }

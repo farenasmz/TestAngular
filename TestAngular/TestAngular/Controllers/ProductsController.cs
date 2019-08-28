@@ -1,60 +1,46 @@
-﻿using Infraestructure.Dto;
+﻿using Core.Products;
+using Infraestructure.Dto;
 using Infraestructure.GenericRepository;
-using Infraestructure.Helpers;
 using Infraestructure.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace TestAngular.Controllers
 {
-	[Authorize(ActiveAuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
-		private readonly IProductRepository Repository;
-		private readonly IUserRepository UserRepository;
-		private readonly IBookProduct ProductRepository;
+		private readonly ProductsBussiness ProductsBusiness;
 
 		public ProductsController(IProductRepository repository, IUserRepository UserRepository, IBookProduct ProductRepository)
 		{
-			Repository = repository;
-			this.UserRepository = UserRepository;
-			this.ProductRepository = ProductRepository;
+			ProductsBusiness = new ProductsBussiness(repository, UserRepository, ProductRepository);
 		}
 
 		// GET: api/Products
 		[HttpGet]
 		public IActionResult GetProducts()
 		{
-            return this.Ok(this.Repository.GetAll());
+			return Ok(ProductsBusiness.GetAllProducts());
 		}
 
 		// GET: api/Products/5
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Product>> GetProduct([FromRoute] int id)
 		{
-			Product product;
-
 			try
 			{
-				product = await this.Repository.GetByIdAsync(id);
-
-				if (product == null)
-				{
-					return NotFound();
-				}
+				return await ProductsBusiness.GetProductById(id);
 			}
 			catch (Exception)
 			{
 				return BadRequest();
 			}
-
-			return product;
 		}
 
 		// PUT: api/Products/5
@@ -68,8 +54,7 @@ namespace TestAngular.Controllers
 					return NotFound();
 				}
 
-				product.AvailableQuantity = product.Quantity;
-				await this.Repository.UpdateAsync(product);
+				await ProductsBusiness.PutProduct(product);
 				return Ok();
 			}
 			catch (Exception)
@@ -82,58 +67,12 @@ namespace TestAngular.Controllers
 		[Route("BookProduct")]
 		public async Task<IActionResult> BookProduct([FromBody] BookProductDto bookProduct)
 		{
-			Product product;
-			User user;
-			BookProduct book;
-
 			try
 			{
-				product = await this.Repository.GetByIdAsync(bookProduct.ProductId);
-				user = await this.UserRepository.GetByEmail(bookProduct.Email);
-
-				if (product == null || user == null)
-				{
-					return NotFound();
-				}
-
-				if (product.AvailableQuantity == 0)
-				{
-					return BadRequest("There is no more quantity available");
-				}
-
-				book = this.ProductRepository.GetBookByPersonAndProduct(user.Id, product.Id);
-
-				if (book == null)
-				{
-					book = new BookProduct();
-					book.ProductId = product.Id;
-					book.UserID = user.Id;
-					book.Quantity = 1;
-					product.AvailableQuantity -= 1;
-					await this.ProductRepository.CreateAsync(book);
-				}
-
-				if (bookProduct.Value < 0)
-				{
-					book.Quantity -= 1;
-					product.AvailableQuantity += 1;
-				}
-				else
-				{
-					book.Quantity += 1;
-					product.AvailableQuantity -= 1;
-				}
-
-				if (product.AvailableQuantity > product.Quantity)
-				{
-					return BadRequest("There is no more quantity available");
-				}
-
-				await this.ProductRepository.UpdateAsync(book);
-				await this.Repository.UpdateAsync(product);
+				await ProductsBusiness.BookProduct(bookProduct);
 				return Ok();
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return BadRequest();
 			}
@@ -144,34 +83,9 @@ namespace TestAngular.Controllers
 		[Route("ResetProduct")]
 		public async Task<IActionResult> ResetProductAsync(int productId, [FromBody] User user)
 		{
-			Product product;
-			User tmpUser;
-
 			try
 			{
-				user.Password = Security.sha256_hash(user.Password);
-				tmpUser = await UserRepository.ValidateEmailAndPassword(user.Email, user.Password);
-
-				if (tmpUser != null)
-				{
-					if (tmpUser.isActive)
-					{
-						product = await this.Repository.GetByIdAsync(productId);
-
-						using (TransactionScope transaction = new TransactionScope())
-						{
-							this.ProductRepository.ResetProduct(product.Id);
-							this.Repository.ResetProductQuantity(product.Id, product.Quantity);
-							transaction.Complete();
-							return Ok();
-						}
-					}
-					else
-					{
-						return BadRequest("Blocked user.");
-					}
-				}
-
+				await ProductsBusiness.ResetProducts(productId, user);
 				return BadRequest("Wrong Password");
 			}
 			catch (Exception ex)
@@ -186,12 +100,10 @@ namespace TestAngular.Controllers
 		{
 			try
 			{
-				product.IsActive = true;
-				product.AvailableQuantity = product.Quantity;
-				await this.Repository.CreateAsync(product);
+				product = await ProductsBusiness.CreateProduct(product);
 				return CreatedAtAction("GetProduct", new { id = product.Id }, product);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return BadRequest();
 			}
@@ -199,20 +111,11 @@ namespace TestAngular.Controllers
 
 		// DELETE: api/Products/5
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<Product>> DeleteProduct(int id)
+		public async Task<ActionResult> DeleteProduct(int id)
 		{
-			Product product;
 			try
 			{
-				product = await this.Repository.GetByIdAsync(id);
-
-				if (product == null)
-				{
-					return NotFound();
-				}
-
-				product.IsActive = false;
-				await this.Repository.UpdateAsync(product);
+				await ProductsBusiness.DisableProduct(id);
 				return Ok();
 			}
 			catch (Exception)
