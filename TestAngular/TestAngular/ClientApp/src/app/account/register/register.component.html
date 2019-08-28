@@ -16,7 +16,7 @@
                formControlName="email" />
         <span class="help-block" *ngIf="(formGroup.get('email').touched || formGroup.get('email').dirty) && formGroup.get('email').errors">
           <span *ngIf="formGroup.get('email').errors.required">
-            El campo email es requerido
+            Email field is required
           </span>
         </span>
       </div>
@@ -35,26 +35,23 @@
                formControlName="password" />
         <span class="help-block" *ngIf="(formGroup.get('password').touched || formGroup.get('password').dirty) && formGroup.get('password').errors">
           <span *ngIf="formGroup.get('password').errors.required">
-            El campo password es requerido
+            Password Filed is required
           </span>
         </span>
       </div>
     </div>
 
-    <div class="form-group"
-         [ngClass]="{'has-error': (formGroup.get('rol').touched || formGroup.get('rol').dirty) && !formGroup.get('rol').valid }">
+    <div class="form-group">
       <label class="col-md-2 control-label"
              for="rol">Rol</label>
-
       <div class="col-md-8">
         <select class="form-control" required id="rol" formControlName="rol">
-          <option value="">[Select rol]</option>
+          <option value="0" selected="selected">[Select rol]</option>
           <option value="-1">Admin</option>
           <option value="1"> Regular User</option>
         </select>
-        <span class="help-block" *ngIf="(formGroup.get('rol').touched || formGroup.get('rol').dirty) && formGroup.get('rol').errors">
-          <span *ngIf="formGroup.get('rol').errors.required">
-            El campo rol es requerido
+        <span class="help-block" >
+          <span>
           </span>
         </span>
       </div>
@@ -67,18 +64,18 @@
                   type="button"
                   (click)="loguearse()"
                   [disabled]="!formGroup.valid">
-            Loguearse
+            Login
           </button>
           <button class="btn btn-primary"
                   type="button"
                   (click)="registrarse()"
                   [disabled]="!formGroup.valid">
-            Registrarse
+            Sign up
           </button>
           <button class="btn"
                   type="button"
                   [routerLink]='["/"]'>
-            Cancelar
+            Cancel
           </button>
         </span>
 

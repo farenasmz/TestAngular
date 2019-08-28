@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IUser } from '../IUser';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
   selector: 'app-users-form',
@@ -14,9 +15,11 @@ export class UsersFormComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private Service: UserService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute, private alert: AlertService) {
+    this.alertService = this.alert;
+  }
 
-
+  alertService: AlertService;
   modoEdicion: boolean = false;
   formGroup: FormGroup;
   userID: number;
@@ -31,6 +34,8 @@ export class UsersFormComponent implements OnInit {
     this.formGroup = this.fb.group({
       email: '',
       password: '',
+      isActive: '',
+      rol: ''
     });
 
     this.activatedRoute.params.subscribe(params => {
@@ -43,7 +48,6 @@ export class UsersFormComponent implements OnInit {
       this.Service.getUser(this.userID.toString())
         .subscribe(product => this.cargarFormulario(product),
           error => this.router.navigate(["/Account"]));
-
     });
 
   }
@@ -53,6 +57,7 @@ export class UsersFormComponent implements OnInit {
       email: user.email,
       password: user.password,
       isActive: user.isActive,
+      rol: user.rol
     });
   }
 
@@ -66,18 +71,22 @@ export class UsersFormComponent implements OnInit {
       user.id = this.userID;
       this.Service.updateUser(user)
         .subscribe(user => this.onSaveSuccess(),
-          error => alert(error));
+          error => this.alertService.ShowErrorAlert(error));
     } else {
-      // agregar el registro
-
+      // agregar el registro.
+      if (user.password == "") {
+        this.alertService.ShowErrorAlert("Password is required");
+        return;
+      }
+      user.isActive = true;
       this.Service.createUser(user)
         .subscribe(persona => this.onSaveSuccess(),
-          error => alert(error));
+          error => this.alertService.ShowErrorAlert(error));
     }
   }
 
   onSaveSuccess() {
-    alert("All okey");
+    this.alertService.ShowSuccessAlert()
     this.router.navigate
     this.router.navigate(["users"]);
   }

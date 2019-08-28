@@ -4,16 +4,24 @@
   <meta charset="utf-8">
   <title>TestAngular</title>
   <base href="/">
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.css"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js" />
-
-
-
 </head>
 <body>
-  <app-root>Loading...</app-root>
+  <app-root>
+    <div class="row">
+      <div>
+        <img class="center img img-responsive" src="assets/Material-Loading-Animation.gif" />
+      </div>
+    </div>
+  </app-root>
+  <style>
+    .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+  </style>
 </body>
 </html>

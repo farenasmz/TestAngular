@@ -17,7 +17,7 @@ namespace Infraestructure.Models
 
 		public int Quantity { get; set; }
 		
-		public Product product { get; set; }
-        public User user { get; set; }
+		public Product Product { get; set; }
+        public User User { get; set; }
     }
 }

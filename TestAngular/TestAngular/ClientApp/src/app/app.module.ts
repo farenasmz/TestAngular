@@ -27,6 +27,8 @@ import { ProductPasswordService } from './products/product-password.service';
 import { LogComponent } from './logs/log/log.component';
 import { LogService } from './logs/log.service';
 import { RegularGuardService } from './services/regular-guard.service';
+import { AlertComponent } from './alert/alert.component';
+import { AlertService } from './alert/alert.service';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ import { RegularGuardService } from './services/regular-guard.service';
     ProductBookComponent,
     ProductPasswordComponent,
     LogComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -69,6 +72,7 @@ import { RegularGuardService } from './services/regular-guard.service';
     AuthGuardService,
     RegularGuardService,
     UserService,
+    AlertService,
     ProductService,
     ProductBookService,
     ProductPasswordService,

@@ -4,6 +4,7 @@ import { IUserInfo } from '../user-info';
 import { AccountService } from '../account.service';
 import { Router } from '@angular/router';
 import { forEach } from '@angular/router/src/utils/collection';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -13,48 +14,55 @@ import { forEach } from '@angular/router/src/utils/collection';
 
 export class RegisterComponent implements OnInit {
 
+  alertService: AlertService;
   public ErrorMessage: string;
   public currentUser: string;
   public rol: number;
-  
+
   constructor(private fb: FormBuilder,
     private accountService: AccountService,
-    private router: Router) { }
+    private router: Router, private alert: AlertService) {
+    this.alertService = alert;
+  }
   formGroup: FormGroup;
 
   ngOnInit() {
     this.formGroup = this.fb.group({
       email: '',
       password: '',
-      rol: '',
+      rol: '0',
     });
   }
 
   loguearse() {
     let userInfo: IUserInfo = Object.assign({}, this.formGroup.value);
     this.accountService.login(userInfo).subscribe(token => this.recibirToken(token),
-      error => this.manejarError(error));
+      error => this.alertService.ShowErrorAlert(error));
     this.currentUser = userInfo.email;
-    this.rol = userInfo.rol;
   }
 
   registrarse() {
     let userInfo: IUserInfo = Object.assign({}, this.formGroup.value);
+    if (userInfo.rol == 0) {
+      this.alertService.ShowErrorAlert("Rol required!");
+      return;
+    }
+
     this.accountService.create(userInfo).subscribe(token => this.recibirToken(token),
-      error => this.manejarError(error));
+      error => this.alertService.ShowErrorAlert(error));
+    this.alertService.ShowSuccessAlert();
   }
 
-  recibirToken(token) {
-    localStorage.setItem('token', token.token);
-    localStorage.setItem('tokenExpiration', token.expiration);
+  recibirToken(token: IUserInfo) {
+    localStorage.setItem('token', token.webToken);
+    localStorage.setItem('tokenExpiration', String(token.expiration));
     localStorage.setItem('currentUser', this.currentUser);
-    localStorage.setItem('rol', this.rol.toString());
+    localStorage.setItem('rol', String(token.rol));
     this.router.navigate([""]);
   }
 
   manejarError(error) {
-    if (error && error.error) {
-      alert(error);
+    if (error && error.error) {      
       this.ErrorMessage = (error.error[0].description);
     }
   }

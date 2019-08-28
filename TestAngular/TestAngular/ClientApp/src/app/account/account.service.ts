@@ -17,7 +17,7 @@ export class AccountService {
     return this.http.post<any>(this.apiURL + "/Create", userInfo)
   }
 
-  login(userInfo: IUserInfo): Observable<any> {
+  login(userInfo: IUserInfo): Observable<IUserInfo> {
     return this.http.post<any>(this.apiURL + "/Login", userInfo);
   }
 
@@ -53,6 +53,8 @@ export class AccountService {
       // ya expiró el token
       localStorage.removeItem('token');
       localStorage.removeItem('tokenExpiration');
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("rol");
       return false;
     } else {
       return true;

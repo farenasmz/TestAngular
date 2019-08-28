@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IUser } from './IUser';
 import { UserService } from './user.service';
+import { AlertService } from '../alert/alert.service';
 
 @Component({
   selector: 'app-users',
@@ -10,8 +11,11 @@ import { UserService } from './user.service';
 export class UsersComponent implements OnInit {
 
   Datausers: IUser[];
+  alertService: AlertService;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private alert: AlertService) {
+    this.alertService = alert;
+  }
 
   ngOnInit() {
     this.cargarData();
@@ -20,17 +24,13 @@ export class UsersComponent implements OnInit {
   delete(userid: number) {
     this.userService.deleteUser(userid.toString())
       .subscribe(product => this.cargarData(),
-        error => alert(error));
+        error => this.alertService.ShowErrorAlert(error));
+    this.alertService.ShowSuccessAlert();
   }
 
   cargarData() {
-   
-
     this.userService.getUsers().subscribe((data: IUser[]) => {
       this.Datausers = data;
-      console.log("Ahora");
-      console.log(this.Datausers);
-    });
-
+    }, error => this.alertService.ShowErrorAlert(error));
   }
 }

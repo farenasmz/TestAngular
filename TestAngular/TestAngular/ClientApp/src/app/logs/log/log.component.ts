@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ILog } from './ILog';
 import { LogService } from '../log.service';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
   selector: 'app-log',
@@ -10,8 +11,11 @@ import { LogService } from '../log.service';
 export class LogComponent implements OnInit {
 
   logs: ILog[];
+  alertService: AlertService;
 
-  constructor(private LogService: LogService) { }
+  constructor(private LogService: LogService, private alert: AlertService) {
+    this.alertService = alert;
+  }
 
   ngOnInit() {
     this.cargarData();
@@ -20,7 +24,7 @@ export class LogComponent implements OnInit {
   cargarData() {
     this.LogService.getLogs()
       .subscribe(logWs => this.logs = logWs,
-        error => console.error(error));
+        error => this.alertService.ShowErrorAlert(error));
   }
 
 }

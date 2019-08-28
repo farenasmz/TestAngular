@@ -13,7 +13,7 @@ namespace TestAngular.Controllers
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[Route("api/[controller]")]
 	[ApiController]
-	public class ProductsController : ControllerBase
+    public class ProductsController : ControllerBase
 	{
 		private readonly ProductsBussiness ProductsBusiness;
 
@@ -74,7 +74,7 @@ namespace TestAngular.Controllers
 			}
 			catch (Exception)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace TestAngular.Controllers
 			}
 			catch (Exception)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
