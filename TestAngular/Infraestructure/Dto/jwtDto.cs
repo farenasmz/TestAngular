@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Infraestructure.Dto
 {
-	public class jwtDto
+	public class JwtDto
 	{
 		public string Token { get; set; }
 		public DateTime Expiration { get; set; }

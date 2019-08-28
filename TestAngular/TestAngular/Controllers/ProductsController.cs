@@ -26,7 +26,14 @@ namespace TestAngular.Controllers
 		[HttpGet]
 		public IActionResult GetProducts()
 		{
-			return Ok(ProductsBusiness.GetAllProducts());
+			try
+			{
+				return Ok(ProductsBusiness.GetAllProducts());
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}			
 		}
 
 		// GET: api/Products/5
@@ -37,9 +44,9 @@ namespace TestAngular.Controllers
 			{
 				return await ProductsBusiness.GetProductById(id);
 			}
-			catch (Exception)
+			catch (Exception ex) 
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -57,9 +64,9 @@ namespace TestAngular.Controllers
 				await ProductsBusiness.PutProduct(product);
 				return Ok();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -72,9 +79,9 @@ namespace TestAngular.Controllers
 				await ProductsBusiness.BookProduct(bookProduct);
 				return Ok();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -86,7 +93,7 @@ namespace TestAngular.Controllers
 			try
 			{
 				await ProductsBusiness.ResetProducts(productId, user);
-				return BadRequest("Wrong Password");
+				return Ok();
 			}
 			catch (Exception ex)
 			{
@@ -103,9 +110,9 @@ namespace TestAngular.Controllers
 				product = await ProductsBusiness.CreateProduct(product);
 				return CreatedAtAction("GetProduct", new { id = product.Id }, product);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -118,9 +125,9 @@ namespace TestAngular.Controllers
 				await ProductsBusiness.DisableProduct(id);
 				return Ok();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 	}

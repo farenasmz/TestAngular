@@ -39,18 +39,19 @@ export class RegisterComponent implements OnInit {
     this.accountService.login(userInfo).subscribe(token => this.recibirToken(token),
       error => this.alertService.ShowErrorAlert(error));
     this.currentUser = userInfo.email;
+    this.rol = userInfo.rol;
   }
 
   registrarse() {
     let userInfo: IUserInfo = Object.assign({}, this.formGroup.value);
     if (userInfo.rol == 0) {
-      this.alertService.ShowErrorAlert("Rol required!");
+      this.alertService.ShowErrorMessageAlert("Rol required!");
       return;
     }
 
     this.accountService.create(userInfo).subscribe(token => this.recibirToken(token),
       error => this.alertService.ShowErrorAlert(error));
-    this.alertService.ShowSuccessAlert();
+    this.currentUser = userInfo.email;
   }
 
   recibirToken(token: IUserInfo) {

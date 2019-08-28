@@ -40,7 +40,7 @@ namespace Core.Users
 			return user;
 		}
 
-		public async Task<jwtDto> CreateUser(User model, string secretKey)
+		public async Task<SecurityLoginDto> CreateUser(User model, string secretKey)
 		{
 			if (Repository.ValidateEmail(model.Email))
 			{
@@ -53,28 +53,28 @@ namespace Core.Users
 			return Security.BuildToken(model, secretKey);
 		}
 
-		public async Task<jwtDto> Login(User user, string superKey)
+		public async Task<SecurityLoginDto> Login(User user, string superKey)
 		{
 			User tmpUser;
 			user.Password = Security.Sha256_hash(user.Password);
 			tmpUser = await Repository.ValidateEmailAndPassword(user.Email, user.Password);
-			jwtDto jwdto;
+			SecurityLoginDto jwdto;
 
 			if (tmpUser != null)
 			{
 				if (tmpUser.isActive)
 				{
-					jwdto = Security.BuildToken(user, superKey);
+					jwdto = Security.BuildToken(tmpUser, superKey);
 					await LogRepository.CreateLogAsync(tmpUser, "Inicio de sesión");
 				}
 				else
 				{
-					throw new InvalidOperationException("Blocked user.");
+					throw new Exception("Blocked user.");
 				}
 			}
 			else
 			{
-				throw new InvalidOperationException("User o password not valid.");
+				throw new Exception("User o password not valid.");
 			}
 
 			return jwdto;

@@ -37,14 +37,14 @@ namespace Infraestructure.Helpers
 			return result;
 		}
 
-		public static jwtDto BuildToken(User User, string Secretkey)
+		public static SecurityLoginDto BuildToken(User User, string Secretkey)
 		{
 			Claim[] claims;
 			SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secretkey));
 			SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 			DateTime expiration = DateTime.UtcNow.AddHours(1);
 			JwtSecurityToken token;
-			jwtDto jwtDto;
+			SecurityLoginDto loginDto;
 
 			claims = new[]
 			{
@@ -59,13 +59,15 @@ namespace Infraestructure.Helpers
 			   expires: expiration,
 			   signingCredentials: creds);
 
-			jwtDto = new jwtDto
+			loginDto = new SecurityLoginDto
 			{
-				Token = new JwtSecurityTokenHandler().WriteToken(token),
-				Expiration = expiration
+				WebToken = new JwtSecurityTokenHandler().WriteToken(token),
+				Expiration = expiration,
+				IsActive = User.isActive,
+				Rol = User.Rol
 			};
 
-			return jwtDto;
+			return loginDto;
 		}
 	}
 }

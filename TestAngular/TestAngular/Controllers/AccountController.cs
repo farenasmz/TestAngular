@@ -1,20 +1,10 @@
 ﻿using Core.Users;
 using Infraestructure.Dto;
 using Infraestructure.GenericRepository;
-using Infraestructure.Helpers;
 using Infraestructure.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace TestAngular.Controllers
@@ -28,14 +18,14 @@ namespace TestAngular.Controllers
 
 		public AccountController(IUserRepository repository, IConfiguration iConfiguration, ILog logRepository)
 		{
-			this.Configuration = iConfiguration;
+			Configuration = iConfiguration;
 			UserBusiness = new UsersBussiness(repository, logRepository);
 		}
 
 		[HttpGet]
 		public IActionResult GetUsers()
 		{
-			return this.Ok(UserBusiness.GetAllUsers());
+			return Ok(UserBusiness.GetAllUsers());
 		}
 
 		[HttpGet("{id}")]
@@ -43,11 +33,11 @@ namespace TestAngular.Controllers
 		{
 			try
 			{
-				return await this.UserBusiness.GetUserById(id);
+				return await UserBusiness.GetUserById(id);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -55,14 +45,14 @@ namespace TestAngular.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreateUser([FromBody] User model)
 		{
-			jwtDto result;
+			SecurityLoginDto result;
 
 			if (ModelState.IsValid)
 			{
 				try
 				{
 					result = await UserBusiness.CreateUser(model, Configuration["SuperKey"]);
-					
+
 					if (result == null)
 					{
 						return BadRequest("Email already registered.");
@@ -70,9 +60,9 @@ namespace TestAngular.Controllers
 
 					return Ok(result);
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
-					return BadRequest();
+					return BadRequest(ex);
 				}
 			}
 			else
@@ -87,7 +77,16 @@ namespace TestAngular.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				try
+				{
+
 				return Ok(await UserBusiness.Login(User, Configuration["SuperKey"]));
+
+				}
+				catch (Exception ex)
+				{
+					return BadRequest(ex.Message);
+				}
 			}
 			else
 			{
@@ -95,21 +94,21 @@ namespace TestAngular.Controllers
 			}
 		}
 
-        public async Task<IActionResult> PutUser([FromBody] User user)
-        {
-            try
-            {
-                if (user == null)
-                {
-                    return NotFound();
-                }
+		public async Task<IActionResult> PutUser([FromBody] User user)
+		{
+			try
+			{
+				if (user == null)
+				{
+					return NotFound();
+				}
 
 				await UserBusiness.UpdateUser(user);
 				return Ok();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -121,9 +120,9 @@ namespace TestAngular.Controllers
 				await UserBusiness.DisableUser(id);
 				return Ok();
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 	}

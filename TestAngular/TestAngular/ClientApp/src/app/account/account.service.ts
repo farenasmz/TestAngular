@@ -34,7 +34,8 @@ export class AccountService {
     localStorage.removeItem("tokenExpiration");
     localStorage.removeItem("currentUser");
     localStorage.removeItem("rol");
-    this.router.navigate(['']);
+    localStorage.clear();
+    this.router.navigate(['register-login']);
   }
 
   estaLogueado(): boolean {

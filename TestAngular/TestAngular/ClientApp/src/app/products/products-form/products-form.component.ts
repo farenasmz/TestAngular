@@ -34,7 +34,7 @@ export class ProductsFormComponent implements OnInit {
     this.formGroup = this.fb.group({
       description: '',
       quantity: '',
-      isActive:''
+      isActive:'true'
     });
 
     this.activatedRoute.params.subscribe(params => {

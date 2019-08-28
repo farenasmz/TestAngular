@@ -8,7 +8,7 @@ namespace Infraestructure.Dto
     {
         public int Rol { get; set; }
         public bool IsActive{ get; set; }
-        public DateTime expiration { get; set; }
+        public DateTime Expiration { get; set; }
         public string WebToken { get; set; }
     }
 }

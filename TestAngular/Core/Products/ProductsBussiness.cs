@@ -60,11 +60,6 @@ namespace Core.Products
 				throw new KeyNotFoundException();
 			}
 
-			if (product.AvailableQuantity == 0)
-			{
-				throw new InvalidOperationException("There is no more quantity available");
-			}
-
 			book = ProductRepository.GetBookByPersonAndProduct(user.Id, product.Id);
 
 			if (book == null)
@@ -75,7 +70,6 @@ namespace Core.Products
 					UserID = user.Id,
 					Quantity = 1
 				};
-				product.AvailableQuantity -= 1;
 				await ProductRepository.CreateAsync(book);
 			}
 
@@ -88,6 +82,11 @@ namespace Core.Products
 			{
 				book.Quantity += 1;
 				product.AvailableQuantity -= 1;
+			}
+
+			if (product.AvailableQuantity == 0)
+			{
+				throw new InvalidOperationException("There is no more quantity available");
 			}
 
 			if (product.AvailableQuantity > product.Quantity)

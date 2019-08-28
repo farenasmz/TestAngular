@@ -3,6 +3,7 @@ using Infraestructure.GenericRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace TestAngular.Controllers
 {
@@ -21,7 +22,14 @@ namespace TestAngular.Controllers
 		[HttpGet]
 		public IActionResult GetProducts()
 		{
-			return Ok(LogsBussiness.GetProducts());
+			try
+			{
+				return Ok(LogsBussiness.GetProducts());
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 	}
 }
