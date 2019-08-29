@@ -82,7 +82,17 @@ namespace Core.Users
 
 		public async Task UpdateUser(User user)
 		{
-			user.Password = Security.Sha256_hash(user.Password);
+			User tmpUser = await this.Repository.GetByIdAsync(user.Id);
+			
+			if (string.IsNullOrEmpty(user.Password))
+			{
+				user.Password = tmpUser.Password;
+			}
+			else
+			{
+				user.Password = Security.Sha256_hash(user.Password);
+			}
+
 			await this.Repository.UpdateAsync(user);			
 		}
 
