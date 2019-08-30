@@ -50,6 +50,7 @@ namespace Core.Users
 			model.isActive = true;
 			model.Password = Security.Sha256_hash(model.Password);
 			await Repository.CreateAsync(model);
+			await LogRepository.CreateLogAsync(model, "Inicio de sesión");
 			return Security.BuildToken(model, secretKey);
 		}
 
@@ -93,7 +94,7 @@ namespace Core.Users
 				user.Password = Security.Sha256_hash(user.Password);
 			}
 
-			await this.Repository.UpdateAsync(user);			
+			await this.Repository.UpdateAsync(user);
 		}
 
 		public async Task DisableUser(int id)
